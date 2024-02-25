@@ -20,8 +20,9 @@ document.getElementById("button-container").addEventListener("click", function(e
             console.log(`WEEKDAY SALE: Rs.${getMaxSales.weekSale}`); //TODO
             break;
         case "2":
-            let duplicateOrders = checkDuplicateOrders();
-            console.log('Users with same order: ',duplicateOrders);
+            let {orderDetails, usersWithDuplicateOrders} = checkDuplicateOrders();
+            console.log('Number of users with same order', usersWithDuplicateOrders.size);
+            console.log('Users with same order: ',orderDetails);
             break;
         case "3":
             let { highestSellingRestaurant, highestSales } = getHighSaleRestaurant();
