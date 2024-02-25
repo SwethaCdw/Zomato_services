@@ -7,6 +7,7 @@ import { ordersData } from '../services/zomato-services.js';
 export function getMaxSaleDetails(){
     const orders = ordersData;
     let itemsSoldByDate = getItemsSoldByDate(orders);
+    console.log(itemsSoldByDate);
 
     let maxDayDetail = getMaxSoldDayDetail(itemsSoldByDate);
 
@@ -76,6 +77,7 @@ function getItemsSoldByDate(orders) {
         let { date, quantity, price } = order;
         if (obj[date]) {
             obj[date].quantity += quantity;
+            obj[date].price += price;
         } else {
             obj[date] = { quantity: quantity, price: price };
         }
