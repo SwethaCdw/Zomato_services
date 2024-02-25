@@ -39,15 +39,17 @@ export function checkDuplicateOrders() {
     }
 
     // Iterate through orderMap to get the userDetails
+    let usersWithDuplicateOrders = new Set();
     orderMap.forEach((value, key) => {
         if (value.length > 1) {
             const userDetails = value.map(order => {
+                usersWithDuplicateOrders.add(order.userId);
                 return usersMap.get(order.userId)
             });
             orderDetails.push({ userDetails, orderDetails: key.trim() });
         }
     });
 
-    return orderDetails;
+    return {orderDetails, usersWithDuplicateOrders};
 
 }
