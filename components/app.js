@@ -14,48 +14,48 @@ document.getElementById("button-container").addEventListener("click", function(e
 
     switch (buttonId) {
         case "1":
-            let getMaxSales = getMaxSaleDetails();
+            const getMaxSales = getMaxSaleDetails();
             console.log('Max day: ', getMaxSales.maxDayDetail);
-            console.log(`WEEKDAY SALE: Rs.${getMaxSales.weekSale}`); //TODO
+            console.log(`${getMaxSales.maxDayDetail.maxDayType} SALE: Rs.${getMaxSales.weekSale}`);
             break;
         case "2":
-            let {orderDetails, usersWithDuplicateOrders} = checkDuplicateOrders();
+            const {orderDetails, usersWithDuplicateOrders} = checkDuplicateOrders();
             console.log('Number of users with same order', usersWithDuplicateOrders.size);
             console.log('Users with same order: ',orderDetails);
             break;
         case "3":
-            let { highestSellingRestaurant, highestSales } = getHighSaleRestaurant();
+            const { highestSellingRestaurant, highestSales } = getHighSaleRestaurant();
             console.log(`Highest Sales Restaurant Name : ${highestSellingRestaurant}`);
             console.log(`Sale Price : ${highestSales}`);
             break;
         case "4":
-            let unsoldRestaurants = getUnSoldRestaurant();
+            const unsoldRestaurants = getUnSoldRestaurant();
             console.log("Restaurants that did not make any sales:" ,unsoldRestaurants);
             break;
         case "5":
-            let similarRestaurants = getRestaurantWithSameItems();
+            const similarRestaurants = getRestaurantWithSameItems();
             console.log("Restaurants serving exactly similar foods:");
             console.log(similarRestaurants);
             break;
         case "6":
-            let numberOfUsers = getUsersWithFoodAndBeverage();
+            const numberOfUsers = getUsersWithFoodAndBeverage();
             console.log(`Number of users who ordered both food and beverage: ${numberOfUsers}`);
             break;
         case "7":
-            let { itemName, restaurantName, totalSold } = getSoldQuantityInfo();
+            const { itemName, restaurantName, totalSold } = getSoldQuantityInfo();
             if(itemName){
                 console.log(`Total ${itemName} sold at ${restaurantName}: ${totalSold}`);
             }
             break;
         case "8":
-            let {itemToFind, restaurantsServingItem} = getRestaurantInfo();
+            const {itemToFind, restaurantsServingItem} = getRestaurantInfo();
             if(itemToFind && restaurantsServingItem){
                 console.log(`Restaurants serving ${itemToFind}:`);
                 console.log(restaurantsServingItem);
             }
             break;
         case "9":
-            let {userInput, sortedOrders} = sortOrdersByDate();
+            const {userInput, sortedOrders} = sortOrdersByDate();
             if(sortedOrders){
                 console.log(`Sorted Orders in ${userInput === APP_CONSTANTS.ASCENDING ? 'Ascending' : 'Descending'}`, 
                 sortedOrders);

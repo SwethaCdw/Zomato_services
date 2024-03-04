@@ -9,13 +9,9 @@ import { ordersData } from '../services/zomato-services.js';
 export function getHighSaleRestaurant() {
     const orders = ordersData;
 
-    orders.forEach(order => {
-    });
-    const restaurantSalesMap = new Map();
+    const restaurantSales = getRestaurantSalesMap(orders);
 
-    getRestaurantSalesMap(restaurantSalesMap, orders);
-
-    return getHighestSaleRestaurantDetails(restaurantSalesMap);
+    return getHighestSaleRestaurantDetails(restaurantSales);
 
 }
 
@@ -25,16 +21,19 @@ export function getHighSaleRestaurant() {
  * @param {*} orders 
  */
 
-function getRestaurantSalesMap(restaurantSalesMap, orders) {
-    orders.forEach(order => {
-        const { restaurant_name, price } = order;
+function getRestaurantSalesMap(orders) {
 
-        if (restaurantSalesMap.has(restaurant_name)) {
-            restaurantSalesMap.set(restaurant_name, restaurantSalesMap.get(restaurant_name) + price);
+    return orders.reduce((obj, order) => {
+
+        let { restaurant_name , price } = order;
+        if (obj[restaurant_name]) {
+            obj[restaurant_name] += price;
         } else {
-            restaurantSalesMap.set(restaurant_name, price);
+            obj[restaurant_name] =  price ;
         }
-    });
+        return obj;
+    }, {});
+
 }
 
 /**
@@ -42,16 +41,15 @@ function getRestaurantSalesMap(restaurantSalesMap, orders) {
  * @param {*} updatedrestaurantSalesMap 
  * @returns highestSales & highestSellingRestaurant
  */
-function getHighestSaleRestaurantDetails(restaurantSalesMap) {
+function getHighestSaleRestaurantDetails(restaurantSales) {
     let highestSales = 0;
     let highestSellingRestaurant = '';
 
-    restaurantSalesMap.forEach((totalSales, restaurantName) => {
-        if (totalSales > highestSales) {
-            highestSales = totalSales;
-            highestSellingRestaurant = restaurantName;
-        }
-    });
+    let sortedRestaurants = Object.entries(restaurantSales).sort((a, b) => b[1] - a[1]);
+
+    let highestSellingRestaurantDetails = sortedRestaurants[0];
+    highestSellingRestaurant = highestSellingRestaurantDetails[0];
+    highestSales = highestSellingRestaurantDetails[1];
 
     return { highestSales, highestSellingRestaurant };
 }

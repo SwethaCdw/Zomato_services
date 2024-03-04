@@ -10,11 +10,14 @@ export function getUnSoldRestaurant() {
     const restaurantInfo = restaurantsData;
 
     const soldRestaurantNames = new Set(orders.map(order => order.restaurant_name.toUpperCase()));
-    return restaurantInfo.reduce((unsoldRestaurants, restaurant) => {
-        if (!soldRestaurantNames.has(restaurant.name.toUpperCase())) {
-            unsoldRestaurants.push(restaurant.name);
+    
+    let unsoldRestaurants = restaurantInfo
+    .filter(restaurant => {
+        if(!soldRestaurantNames.has(restaurant.name.toUpperCase())){
+            return restaurant.name;
         }
-        return unsoldRestaurants;
-    }, []);
+    });
+
+    return unsoldRestaurants.length;
 
 }

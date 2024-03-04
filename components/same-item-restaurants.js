@@ -6,22 +6,18 @@ import { restaurantsData } from '../services/zomato-services.js';
  * 
  */
 export function getRestaurantWithSameItems() {
-    const foodMap = new Map();
-    const restaurants = restaurantsData;
-
-    restaurants.forEach(({ name, food }) => {
-        if(food.length !== 0){
-            const foodKey = food.sort().join('-'); 
-            if (!foodMap.has(foodKey)) {
-                foodMap.set(foodKey, [name]);
+    const similarRestaurants = Object.values(restaurantsData.reduce((foodGroups, { name, food }) => {
+        if (food.length !== 0) {
+            const foodKey = food.sort().join('-');
+            if (!foodGroups[foodKey]) {
+                foodGroups[foodKey] = [name];
             } else {
-                foodMap.get(foodKey).push(name);
+                foodGroups[foodKey].push(name);
             }
         }
-    });
+        return foodGroups;
+    }, {})).filter(restaurants => restaurants.length > 1);
 
-    const similarRestaurants = Array.from(foodMap.values())
-        .filter(restaurants => restaurants.length > 1);
 
     return similarRestaurants;
 }

@@ -8,19 +8,14 @@ export function checkDuplicateOrders() {
     const orders = ordersData;
     const orderMap = new Map();
     const orderDetails = [];
-    const usersMap = new Map();
 
-    //Setting the userId and userName in a Map to reduce the number of loops
-    for (const user of userData) {
-        usersMap.set(user.id, user.name);
-    }
     //Looping through orders
     for (const order of orders) {
         let userIds = new Set();
         const key = (order.item || "") + " " + (order.drink || "");
 
         //existingOrders- to check if the order has come twice
-        const existingOrders = orderMap.get(key) || [];
+        const existingOrders = orderMap.get(key.trim()) || []; 
 
         //if the order has come twice, add the userId to the userIds set.
         if(existingOrders.length !== 0){
@@ -34,19 +29,20 @@ export function checkDuplicateOrders() {
         //set the items (key) and existing order (value) to orderMap
         if(!userIds.has(order.userId)){
             existingOrders.push(order);
-            orderMap.set(key, existingOrders);
+            orderMap.set(key.trim(), existingOrders);
         }
     }
 
     // Iterate through orderMap to get the userDetails
     let usersWithDuplicateOrders = new Set();
+    console.log(orderMap);
     orderMap.forEach((value, key) => {
         if (value.length > 1) {
             const userDetails = value.map(order => {
                 usersWithDuplicateOrders.add(order.userId);
-                return usersMap.get(order.userId)
+                return userData.find(user => user.id === order.userId).name;
             });
-            orderDetails.push({ userDetails, orderDetails: key.trim() });
+            orderDetails.push({ userDetails, orderDetails: key });
         }
     });
 

@@ -1,4 +1,6 @@
+import { APP_CONSTANTS } from '../constants/app-constants.js';
 import { ordersData } from '../services/zomato-services.js';
+import { createDateObject } from '../utils/utils.js';
 
 /**
  * Identify which day more items are sold, and print weekday sale or weekend sale based on day
@@ -11,12 +13,12 @@ export function getMaxSaleDetails(){
 
     let maxDayDetail = getMaxSoldDayDetail(itemsSoldByDate);
 
-    let weekSale = calculateSalesByWeekdayAndWeekend(itemsSoldByDate);
+    let weekSale = calculateSalesByWeekdayAndWeekend(itemsSoldByDate, maxDayDetail.maxDayType);
 
     if(maxDayDetail.maxDay == 0 || maxDayDetail.maxDay == 6){
-        return {maxDayDetail : maxDayDetail, weekSale: weekSale.weekendSales }
+        return {maxDayDetail : maxDayDetail, weekSale: weekSale }
     } else {
-        return {maxDayDetail : maxDayDetail, weekSale: weekSale.weekdaySales }
+        return {maxDayDetail : maxDayDetail, weekSale: weekSale }
     }
 }
 
@@ -27,19 +29,18 @@ export function getMaxSaleDetails(){
  */
 function getMaxSoldDayDetail(itemsSoldByDate) {
     let maxDate = null;
-    let maxItemsSold = 0;
     
-    for (let date in itemsSoldByDate) {
-        if (itemsSoldByDate[date].quantity > maxItemsSold) {
-            maxItemsSold = itemsSoldByDate[date].quantity;
-            maxDate = date;
-        }
-    }
+    console.log(itemsSoldByDate);
 
-    let maxDay = new Date(maxDate).toLocaleString('en-US', {weekday : 'long'});
+    let sortedMap = Object.entries(itemsSoldByDate).sort((a, b) => b[1].quantity - a[1].quantity);
+
+    maxDate = sortedMap[0][0];
+
+    let maxDay = getDay(maxDate);
 
     let maxDayDetail = {
         maxDay : maxDay,
+        maxDayType : maxDay == 0 || maxDay == 6 ? APP_CONSTANTS.WEEKEND_KEY : APP_CONSTANTS.WEEKDAY_KEY,
         maxDate : maxDate
     }
 
@@ -50,20 +51,24 @@ function getMaxSoldDayDetail(itemsSoldByDate) {
  * 
  * @param {*} itemsSoldByDate - list of orders with date, price and quantity
  */
-function calculateSalesByWeekdayAndWeekend(itemsSoldByDate) {
-    return Object.entries(itemsSoldByDate).reduce((totalSales, [dateStr, { price }]) => {
+function calculateSalesByWeekdayAndWeekend(itemsSoldByDate, maxDayType) {
 
-        const date = new Date(dateStr);
+        return Object.entries(itemsSoldByDate).reduce((sales, [dateStr, { price }]) => {
 
-        if (date.getDay() >= 1 || date.getDay() <= 5) {
-            totalSales.weekdaySales += price;
-        } else {
-            totalSales.weekendSales += price;
-        }
-
-        return totalSales;
-    }, { weekdaySales: 0, weekendSales: 0 });
-}
+            const date = createDateObject(dateStr);
+            if(maxDayType === APP_CONSTANTS.WEEKDAY_KEY) {
+                if (date.getDay() >= 1 || date.getDay() <= 5) {
+                    sales += price;
+                }  
+                return sales;
+            } else {
+                if (date.getDay() === 0 || date.getDay() === 6) {
+                    sales += price;
+                }
+                return sales;
+            }
+        }, 0);
+    }
 
 
 /**

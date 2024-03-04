@@ -7,7 +7,7 @@ export function sortOrdersByDate() {
     const orders = ordersData;
 
     let sortedOrders;
-    if (userInput && userInput === APP_CONSTANTS.ASCENDING || userInput === APP_CONSTANTS.DESCENDING) {
+    if (userInput && (userInput === APP_CONSTANTS.ASCENDING || userInput === APP_CONSTANTS.DESCENDING)) {
         const sortOrder = userInput === APP_CONSTANTS.ASCENDING ? 1 : -1;
         sortedOrders = orders.sort((prevOrder, nextOrder) => {
             return sortOrder * (new Date(prevOrder.date) - new Date(nextOrder.date));
