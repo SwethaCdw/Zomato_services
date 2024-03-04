@@ -12,7 +12,7 @@ export const getDay = (date) => {
 }
 
 //find item from a given array
-export const findItem = (findFrom, itemToFind) => {
+export const isItemFound = (findFrom, itemToFind) => {
     return findFrom.some(item =>
         item.toLowerCase().includes(itemToFind.toLowerCase())
     );

@@ -1,5 +1,5 @@
 import { restaurantsData } from '../services/zomato-services.js';
-import { findItem } from '../utils/utils.js';
+import { isItemFound } from '../utils/utils.js';
 
 /**
  * Which all restaurants serve given beverage or food
@@ -12,9 +12,9 @@ export function getRestaurantInfo() {
         const restaurantsServingItem = restaurantData.reduce((restaurantList, restaurant) => {
         
             // Check if any item in the food array contains the itemToFind ( Case insensitive )
-            const foodFound = findItem(restaurant.food, itemToFind);
+            const foodFound = isItemFound(restaurant.food, itemToFind);
             // Check if any item in the beverages array contains the itemToFind
-            const beveragesFound = findItem( restaurant.beverages, itemToFind);
+            const beveragesFound = isItemFound( restaurant.beverages, itemToFind);
         
             // If the item is found in either food or beverages, add the restaurant to the list
             if (foodFound || beveragesFound) {
