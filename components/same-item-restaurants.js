@@ -1,9 +1,7 @@
 import { restaurantsData } from '../services/zomato-services.js';
 
-
 /**
  * Identify Restaurants List which serve exact similar foods
- * 
  */
 export function getRestaurantWithSameItems() {
     const similarRestaurants = Object.values(restaurantsData.reduce((foodGroups, { name, food }) => {
@@ -17,7 +15,5 @@ export function getRestaurantWithSameItems() {
         }
         return foodGroups;
     }, {})).filter(restaurants => restaurants.length > 1);
-
-
     return similarRestaurants;
 }

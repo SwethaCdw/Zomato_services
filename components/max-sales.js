@@ -9,11 +9,8 @@ import { createDateObject, getDay } from '../utils/utils.js';
 export function getMaxSaleDetails(){
     const orders = ordersData;
     let itemsSoldByDate = getItemsSoldByDate(orders);
-
     let maxDayDetail = getMaxSoldDayDetail(itemsSoldByDate);
-
     let weekSale = calculateSalesByWeekdayAndWeekend(itemsSoldByDate, maxDayDetail.maxDayType);
-
     if(maxDayDetail.maxDay == 0 || maxDayDetail.maxDay == 6){
         return {maxDayDetail : maxDayDetail, weekSale: weekSale }
     } else {
@@ -27,21 +24,15 @@ export function getMaxSaleDetails(){
  * @returns maxDayDetail
  */
 function getMaxSoldDayDetail(itemsSoldByDate) {
-    let maxDate = null;
-    
-    // let sortedMap = Object.entries(itemsSoldByDate).sort((a, b) => b[1].quantity - a[1].quantity);
+    let maxDate = '';
     let sortedMap = Object.keys(itemsSoldByDate).sort((a, b) => itemsSoldByDate[b].quantity - itemsSoldByDate[a].quantity);
-
     maxDate = sortedMap[0];
-
     let maxDay = getDay(maxDate);
-
     let maxDayDetail = {
         maxDay : maxDay,
         maxDayType : maxDay == 0 || maxDay == 6 ? APP_CONSTANTS.WEEKEND_KEY : APP_CONSTANTS.WEEKDAY_KEY,
         maxDate : maxDate
     }
-
     return maxDayDetail;
 }
 
@@ -50,23 +41,25 @@ function getMaxSoldDayDetail(itemsSoldByDate) {
  * @param {*} itemsSoldByDate - list of orders with date, price and quantity
  */
 function calculateSalesByWeekdayAndWeekend(itemsSoldByDate, maxDayType) {
-
     return Object.entries(itemsSoldByDate).reduce((sales, [dateStr, {price}]) => {
         const date = createDateObject(dateStr);
-        if(maxDayType === APP_CONSTANTS.WEEKDAY_KEY) {
-            if (date.getDay() >= 1 || date.getDay() <= 5) {
-                sales += price;
-            }  
-            return sales;
-        } else {
-            if (date.getDay() === 0 || date.getDay() === 6) {
-                sales += price;
-            }
-            return sales;
+        switch(maxDayType) {
+            case APP_CONSTANTS.WEEKDAY_KEY:
+                if (date.getDay() >= 1 || date.getDay() <= 5) {
+                    sales += price;
+                }  
+                return sales;
+            case APP_CONSTANTS.WEEKEND_KEY:
+                if (date.getDay() === 0 || date.getDay() === 6) {
+                    sales += price;
+                }
+                return sales;
+            default:
+                console.log('Invalid Type');
+                break;
         }
     }, 0);
 }
-
 
 /**
  * 
@@ -75,7 +68,6 @@ function calculateSalesByWeekdayAndWeekend(itemsSoldByDate, maxDayType) {
  */
 function getItemsSoldByDate(orders) {
     return orders.reduce((obj, order) => {
-
         let { date, quantity, price } = order;
         if (obj[date]) {
             obj[date].quantity += quantity;

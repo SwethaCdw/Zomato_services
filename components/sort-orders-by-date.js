@@ -3,10 +3,8 @@ import { APP_CONSTANTS } from '../constants/app-constants.js';
 
 export function sortOrdersByDate() {
     const userInput = prompt('Do you want to sort in ASC/DESC?');
-
     const orders = ordersData;
-
-    let sortedOrders;
+    let sortedOrders;   
     if (userInput && (userInput === APP_CONSTANTS.ASCENDING || userInput === APP_CONSTANTS.DESCENDING)) {
         const sortOrder = userInput === APP_CONSTANTS.ASCENDING ? 1 : -1;
         sortedOrders = orders.sort((prevOrder, nextOrder) => {
