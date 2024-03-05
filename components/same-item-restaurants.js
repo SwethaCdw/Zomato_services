@@ -8,7 +8,7 @@ import { restaurantsData } from '../services/zomato-services.js';
 export function getRestaurantWithSameItems() {
     const similarRestaurants = Object.values(restaurantsData.reduce((foodGroups, { name, food }) => {
         if (food.length !== 0) {
-            const foodKey = food.sort().join('-');
+            const foodKey = food.sort().join('-').trim();
             if (!foodGroups[foodKey]) {
                 foodGroups[foodKey] = [name];
             } else {

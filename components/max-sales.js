@@ -1,6 +1,6 @@
 import { APP_CONSTANTS } from '../constants/app-constants.js';
 import { ordersData } from '../services/zomato-services.js';
-import { createDateObject } from '../utils/utils.js';
+import { createDateObject, getDay } from '../utils/utils.js';
 
 /**
  * Identify which day more items are sold, and print weekday sale or weekend sale based on day
@@ -32,9 +32,10 @@ function getMaxSoldDayDetail(itemsSoldByDate) {
     
     console.log(itemsSoldByDate);
 
-    let sortedMap = Object.entries(itemsSoldByDate).sort((a, b) => b[1].quantity - a[1].quantity);
+    // let sortedMap = Object.entries(itemsSoldByDate).sort((a, b) => b[1].quantity - a[1].quantity);
+    let sortedMap = Object.keys(itemsSoldByDate).sort((a, b) => itemsSoldByDate[b].quantity - itemsSoldByDate[a].quantity);
 
-    maxDate = sortedMap[0][0];
+    maxDate = sortedMap[0];
 
     let maxDay = getDay(maxDate);
 
@@ -53,22 +54,21 @@ function getMaxSoldDayDetail(itemsSoldByDate) {
  */
 function calculateSalesByWeekdayAndWeekend(itemsSoldByDate, maxDayType) {
 
-        return Object.entries(itemsSoldByDate).reduce((sales, [dateStr, { price }]) => {
-
-            const date = createDateObject(dateStr);
-            if(maxDayType === APP_CONSTANTS.WEEKDAY_KEY) {
-                if (date.getDay() >= 1 || date.getDay() <= 5) {
-                    sales += price;
-                }  
-                return sales;
-            } else {
-                if (date.getDay() === 0 || date.getDay() === 6) {
-                    sales += price;
-                }
-                return sales;
+    return Object.entries(itemsSoldByDate).reduce((sales, [dateStr, {price}]) => {
+        const date = createDateObject(dateStr);
+        if(maxDayType === APP_CONSTANTS.WEEKDAY_KEY) {
+            if (date.getDay() >= 1 || date.getDay() <= 5) {
+                sales += price;
+            }  
+            return sales;
+        } else {
+            if (date.getDay() === 0 || date.getDay() === 6) {
+                sales += price;
             }
-        }, 0);
-    }
+            return sales;
+        }
+    }, 0);
+}
 
 
 /**

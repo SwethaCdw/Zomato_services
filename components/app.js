@@ -19,8 +19,8 @@ document.getElementById("button-container").addEventListener("click", function(e
             console.log(`${getMaxSales.maxDayDetail.maxDayType} SALE: Rs.${getMaxSales.weekSale}`);
             break;
         case "2":
-            const {orderDetails, usersWithDuplicateOrders} = checkDuplicateOrders();
-            console.log('Number of users with same order', usersWithDuplicateOrders.size);
+            const {orderDetails, uniqueUserIds} = checkDuplicateOrders();
+            console.log('Number of users with same order', uniqueUserIds.size);
             console.log('Users with same order: ',orderDetails);
             break;
         case "3":

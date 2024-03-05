@@ -27,9 +27,9 @@ function getRestaurantSalesMap(orders) {
 
         let { restaurant_name , price } = order;
         if (obj[restaurant_name]) {
-            obj[restaurant_name] += price;
+            obj[restaurant_name].price += price;
         } else {
-            obj[restaurant_name] =  price ;
+            obj[restaurant_name] = {price: price} ;
         }
         return obj;
     }, {});
@@ -44,12 +44,11 @@ function getRestaurantSalesMap(orders) {
 function getHighestSaleRestaurantDetails(restaurantSales) {
     let highestSales = 0;
     let highestSellingRestaurant = '';
+    
+    let sortedRestaurants = Object.keys(restaurantSales).sort((a, b) => restaurantSales[b].price - restaurantSales[a].price);   
 
-    let sortedRestaurants = Object.entries(restaurantSales).sort((a, b) => b[1] - a[1]);
-
-    let highestSellingRestaurantDetails = sortedRestaurants[0];
-    highestSellingRestaurant = highestSellingRestaurantDetails[0];
-    highestSales = highestSellingRestaurantDetails[1];
+    highestSellingRestaurant = sortedRestaurants[0];
+    highestSales = restaurantSales[highestSellingRestaurant].price;
 
     return { highestSales, highestSellingRestaurant };
 }
