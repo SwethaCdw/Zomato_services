@@ -9,7 +9,6 @@ import { createDateObject, getDay } from '../utils/utils.js';
 export function getMaxSaleDetails(){
     const orders = ordersData;
     let itemsSoldByDate = getItemsSoldByDate(orders);
-    console.log(itemsSoldByDate);
 
     let maxDayDetail = getMaxSoldDayDetail(itemsSoldByDate);
 
@@ -30,8 +29,6 @@ export function getMaxSaleDetails(){
 function getMaxSoldDayDetail(itemsSoldByDate) {
     let maxDate = null;
     
-    console.log(itemsSoldByDate);
-
     // let sortedMap = Object.entries(itemsSoldByDate).sort((a, b) => b[1].quantity - a[1].quantity);
     let sortedMap = Object.keys(itemsSoldByDate).sort((a, b) => itemsSoldByDate[b].quantity - itemsSoldByDate[a].quantity);
 
